@@ -68,7 +68,7 @@ FROM suppliers
 WHERE supplier_id = 11
 ```
 
-* [ ] ***list orders descending by the order date. The order with date 1998-05-06 should be at the top***
+* [x] ***list orders descending by the order date. The order with date 1998-05-06 should be at the top***
 
   <details><summary>hint</summary>
 
@@ -81,7 +81,7 @@ FROM orders
 ORDER BY order_date DESC
 ```
 
-* [ ] ***find all suppliers who have names longer than 20 characters. Returns 11 records***
+* [x] ***find all suppliers who have names longer than 20 characters. Returns 11 records***
 
   <details><summary>hint</summary>
 
@@ -95,7 +95,7 @@ FROM suppliers
 WHERE length(company_name) > 20
 ```
 
-* [ ] ***find all customers that include the word 'MARKET' in the contact title. Should return 19 records***
+* [x] ***find all customers that include the word 'MARKET' in the contact title. Should return 19 records***
 
   <details><summary>hint</summary>
 
@@ -110,7 +110,7 @@ FROM customers
 WHERE upper(contact_title) LIKE '%MARKET%'
 ```
 
-* [ ] ***add a customer record for***
+* [x] ***add a customer record for***
 * customer id is 'SHIRE'
 * company name is 'The Shire'
 * contact name is 'Bilbo Baggins'
@@ -128,7 +128,7 @@ INSERT INTO customers(customer_id, company_name, contact_name, address, city, po
 VALUES ('SHIRE', 'The Shire', 'Bilbo Baggins', '1 Hobbit-Hole', 'Bag End', '111', 'Middle Earth')
 ```
 
-* [ ] ***update _Bilbo Baggins_ record so that the postal code changes to _"11122"_***
+* [x] ***update _Bilbo Baggins_ record so that the postal code changes to _"11122"_***
 
   <details><summary>hint</summary>
 
@@ -141,7 +141,7 @@ SET postal_code = '11122'
 WHERE contact_name = 'Bilbo Baggins'
 ```
 
-* [ ] ***list orders grouped and ordered by customer company name showing the number of orders per customer company name. _Rattlesnake Canyon Grocery_ should have 18 orders***
+* [x] ***list orders grouped and ordered by customer company name showing the number of orders per customer company name. _Rattlesnake Canyon Grocery_ should have 18 orders***
 
   <details><summary>hint</summary>
 
@@ -150,7 +150,11 @@ WHERE contact_name = 'Bilbo Baggins'
   </details>
 
 ```SQL
-
+SELECT c.company_name, count(o.customer_id)
+FROM customers c JOIN orders o
+ON o.customer_id = c.customer_id
+GROUP BY c.company_name
+ORDER BY c.company_name
 ```
 
 * [ ] ***list customers by contact name and the number of orders per contact name. Sort the list by the number of orders in descending order. _Jose Pavarotti_ should be at the top with 31 orders followed by _Roland Mendal_ with 30 orders. Last should be _Francisco Chang_ with 1 order***
@@ -161,7 +165,11 @@ WHERE contact_name = 'Bilbo Baggins'
   </details>
 
 ```SQL
-
+SELECT c.contact_name, count(o.customer_id) numOfOrders
+FROM customers c JOIN orders o
+ON o.customer_id = c.customer_id
+GROUP BY c.contact_name
+ORDER BY numOfOrders DESC
 ```
 
 * [ ] ***list orders grouped by customer's city showing the number of orders per city. Returns 69 Records with _Aachen_ showing 6 orders and _Albuquerque_ showing 18 orders***
@@ -172,7 +180,11 @@ WHERE contact_name = 'Bilbo Baggins'
   </details>
 
 ```SQL
-
+SELECT c.city, count(o.customer_id) numOfOrders
+FROM customers c JOIN orders o
+ON o.customer_id = c.customer_id
+GROUP BY c.city
+ORDER BY numOfOrders DESC
 ```
 
 ## Data Normalization
@@ -192,51 +204,51 @@ Below are some empty tables to be used to normalize the database
 * Not all of the cells will contain data in the final solution
 * Feel free to edit these tables as necessary
 
-Table Name:
+Table Name: Person Table
 
-|            |            |            |            |            |            |            |            |            |
+|    ID      |    Name    |            |            |            |            |            |            |            |
 |------------|------------|------------|------------|------------|------------|------------|------------|------------|
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
+|     1      |     Jane   |            |            |            |            |            |            |            |
+|     2      |     Bob    |            |            |            |            |            |            |            |
+|     3      |     Sam    |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 
-Table Name:
+Table Name: Pets Table
 
-|            |            |            |            |            |            |            |            |            |
+|  Pet ID    |  Pet Name  | Pet Type ID|   Owner ID |            |            |            |            |            |
 |------------|------------|------------|------------|------------|------------|------------|------------|------------|
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
+|     1      |    Ellie   |   1        |   1        |            |            |            |            |            |
+|     2      |    Tiger   |   2        |   1        |            |            |            |            |            |
+|     3      |    Toby    |   3        |   1        |            |            |            |            |            |
+|     4      |    Joe     |   4        |   2        |            |            |            |            |            |
+|     5      |    Ginger  |   1        |   3        |            |            |            |            |            |
+|     6      | Miss Kitty |   2        |   3        |            |            |            |            |            |
+|     7      |   Bubble   |   5        |   3        |            |            |            |            |            |
 
-Table Name:
+Table Name: Habitat Table
 
-|            |            |            |            |            |            |            |            |            |
+|  Person ID | Fenced Yard|City Dweller|            |            |            |            |            |            |
 |------------|------------|------------|------------|------------|------------|------------|------------|------------|
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
+|    1       |     No     |     Yes    |            |            |            |            |            |            |
+|    2       |     No     |     No     |            |            |            |            |            |            |
+|    3       |     Yes    |     No     |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 
-Table Name:
+Table Name: Pets Type Table
 
-|            |            |            |            |            |            |            |            |            |
+|   Pet ID   |  Pet Type  |            |            |            |            |            |            |            |
 |------------|------------|------------|------------|------------|------------|------------|------------|------------|
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
+|     1      |     Dog    |            |            |            |            |            |            |            |
+|     2      |     Cat    |            |            |            |            |            |            |            |
+|     3      |     Turtle |            |            |            |            |            |            |            |
+|     4      |     Horse  |            |            |            |            |            |            |            |
+|     5      |     Fish   |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 |            |            |            |            |            |            |            |            |            |
 
